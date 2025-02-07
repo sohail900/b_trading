@@ -332,12 +332,11 @@ const SingleListing = ({ slug }) => {
                                         )}
                                     </div>
                                     <div
-                                        className={`${
-                                            images.length + (videoUrl ? 1 : 0) >
+                                        className={`${images.length + (videoUrl ? 1 : 0) >
                                             1
-                                                ? 'gallary_slider'
-                                                : 'hide_gallery_slider'
-                                        }`}
+                                            ? 'gallary_slider'
+                                            : 'hide_gallery_slider'
+                                            }`}
                                     >
                                         <Swiper
                                             dir={isRtl ? 'rtl' : 'ltr'}
@@ -371,16 +370,15 @@ const SingleListing = ({ slug }) => {
                                                     }
                                                 >
                                                     <div
-                                                        className={`swiper_img_div ${
-                                                            index ===
+                                                        className={`swiper_img_div ${index ===
                                                             activeIndex
-                                                                ? 'selected'
-                                                                : ''
-                                                        }`}
+                                                            ? 'selected'
+                                                            : ''
+                                                            }`}
                                                     >
                                                         {index ===
                                                             images.length &&
-                                                        videoUrl ? (
+                                                            videoUrl ? (
                                                             <div className='video-thumbnail'>
                                                                 <div
                                                                     className='thumbnail-container'
@@ -512,7 +510,7 @@ const SingleListing = ({ slug }) => {
                                                                         '' ||
                                                                         e
                                                                             .value[0] ===
-                                                                            null))))
+                                                                        null))))
 
                                                     return (
                                                         !isValueEmptyArray && (
@@ -551,7 +549,7 @@ const SingleListing = ({ slug }) => {
                                                                     </div>
 
                                                                     {e.type ===
-                                                                    'fileinput' ? (
+                                                                        'fileinput' ? (
                                                                         isPdf(
                                                                             e
                                                                                 ?.value[0]
@@ -602,8 +600,8 @@ const SingleListing = ({ slug }) => {
                                                                                 e?.value
                                                                             )
                                                                                 ? e?.value.join(
-                                                                                      ', '
-                                                                                  )
+                                                                                    ', '
+                                                                                )
                                                                                 : e?.value}
                                                                         </p>
                                                                     )}

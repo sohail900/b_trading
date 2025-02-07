@@ -2314,7 +2314,7 @@
 
 .pop_cat_icon_cont {
   border-radius: 50%;
-  border: 1px solid lightgray;
+  border: 0px solid #d3d3d3;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -2326,7 +2326,7 @@
   height: 50%;
   aspect-ratio: 1/1;
   object-fit: fill;
-  border-radius: 100%;
+  border-radius: 15%;
 }
 
 .mrg_btm {
@@ -9679,4 +9679,31 @@ input[type=number] {
   100% {
     transform: rotate(360deg);
   }
+}
+/*
+QUILL STYLE
+*/
+.custom-quill .ql-container {
+    min-height: 150px; /* Increase height */
+    border: 1px solid lightgray !important; /* Light gray border */
+    border-radius: 0 0 4px 4px; /* Match editor border *
+}
+
+.custom-quill .ql-editor {
+    min-height: 150px; /* Ensures text area is tall enough */
+    font-size: 16px; /* Adjust font size */
+    padding: 4px 4px; /* Padding inside editor */
+    color: rgba(0, 0, 0, 0.87); /* Text color */
+}
+/* background-color: #f6f5fa !important */
+.custom-quill .ql-editor::before {
+    font-size: 16px !important;
+    font-style: normal;
+    color: rgba(0, 0, 0, 0.56) !important; /* Placeholder color */
+}
+
+.custom-quill .ql-toolbar {
+    border: 1px solid lightgray !important; /* Toolbar border */
+    border-bottom-width: 0px !important;
+    border-radius: 4px 4px 0 0; /* Match editor border */
 }

@@ -1,5 +1,6 @@
 import { t } from '@/utils'
-
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 
 const ContentTwo = ({ AdListingDetails, handleAdListingChange, handleDetailsSubmit, handleDeatilsBack, systemSettingsData }) => {
 
@@ -19,18 +20,30 @@ const ContentTwo = ({ AdListingDetails, handleAdListingChange, handleDetailsSubm
 
     return (
         <>
+
             <div className="col-12">
+
                 <div className="row formWrapper">
                     <div className="col-12">
                         <label htmlFor="title" className='auth_label' >{t('title')}</label>
                         <input placeholder={t('enterTitle')} className={`${AdListingDetails.title !== '' ? 'bg' : ''}`} value={AdListingDetails.title} type='text' name='title' onChange={handleAdListingChange} required />
                     </div>
 
+                </div>
+                <div className="w-full my-3">
+                    <label className='auth_label' htmlFor="description">{t('description')}</label>
+                    <ReactQuill
+                        theme="snow"
+                        placeholder={t('enterDescription')}
+                        className={`mt-2 custom-quill`}
+                        value={AdListingDetails.desc}
+                        onChange={(content, delta, source, editor) => {
+                            handleAdListingChange({ target: { name: "desc", value: content } })
 
-                    <div className="col-12">
-                        <label className='auth_label' htmlFor="description">{t('description')}</label>
-                        <textarea placeholder={t('enterDescription')} name='desc' className={`${AdListingDetails.desc !== '' ? 'bg' : ''}`} value={AdListingDetails.desc} onChange={handleAdListingChange} required />
-                    </div>
+                        }}
+                    />
+                </div>
+                <div className="row formWrapper">
 
                     <div className="col-12">
                         <label className='auth_label' htmlFor="price">{t('price')}</label>
