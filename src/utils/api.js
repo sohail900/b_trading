@@ -55,6 +55,8 @@ export const MY_REVIEWS = 'my-review'
 export const RENEW_ITEM = 'renew-item'
 export const ADD_REPORT_REVIEW = 'add-review-report'
 export const GET_FRONTEND_SETTINGS = 'get-frontend-settings'
+export const GET_CURRENCY = "currencies"
+
 
 // 1. SETTINGS API
 export const settingsApi = {
@@ -63,6 +65,12 @@ export const settingsApi = {
             params: { type },
         })
     },
+}
+// get currencies.
+export const currencyApi = {
+    getCurrencies :()=>{
+        return Api.get(GET_CURRENCY)
+    }
 }
 export const frontendSettingsApi = {
     getFrontendSetting: ({ type, language_code } = {}) => {
@@ -257,9 +265,9 @@ export const FeaturedSectionApi = {
 // FAQ API
 
 export const getFaqApi = {
-    getFaq: () => {
+    getFaq: (language_code) => {
         return Api.get(GET_FAQ, {
-            params: {},
+            params: {language_code},
         })
     },
 }
@@ -638,6 +646,7 @@ export const addItemApi = {
     addItem: ({
         name,
         slug,
+        currency,
         description,
         category_id,
         all_category_ids,
@@ -664,6 +673,7 @@ export const addItemApi = {
         if (slug) formData.append('slug', slug)
         if (description) formData.append('description', description)
         if (category_id) formData.append('category_id', category_id)
+        if(currency) formData.append("currency",currency)
         if (all_category_ids)
             formData.append('all_category_ids', all_category_ids)
         if (price) formData.append('price', price)
@@ -718,6 +728,7 @@ export const editItemApi = {
         description,
         category_id,
         all_category_ids,
+        currency,
         price,
         contact,
         video_link,
@@ -742,6 +753,7 @@ export const editItemApi = {
         if (slug) formData.append('slug', slug)
         if (description) formData.append('description', description)
         if (category_id) formData.append('category_id', category_id)
+        if (currency) formData.append('currency', currency)
         if (all_category_ids)
             formData.append('all_category_ids', all_category_ids)
         if (price) formData.append('price', price)

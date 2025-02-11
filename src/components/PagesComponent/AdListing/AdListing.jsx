@@ -12,6 +12,7 @@ import { generateSlug, isLogin, isValidURL, t } from '@/utils'
 import {
     addItemApi,
     categoryApi,
+    currencyApi,
     getAreasApi,
     getCitiesApi,
     getCoutriesApi,
@@ -34,6 +35,7 @@ const AdListing = () => {
     const [CurrenCategory, setCurrenCategory] = useState([])
     const [CurrentPath, setCurrentPath] = useState([])
     const [CustomFields, setCustomFields] = useState([])
+    const [currencies, setCurrencies] = useState([])
     const [AdListingDetails, setAdListingDetails] = useState({
         title: '',
         slug: '',
@@ -41,6 +43,7 @@ const AdListing = () => {
         price: '',
         phonenumber: '',
         link: '',
+        currency: "₺",
     })
     const [extraDetails, setExtraDetails] = useState({})
     const [uploadedImages, setUploadedImages] = useState([])
@@ -85,8 +88,26 @@ const AdListing = () => {
         loc: true,
     })
     const [IsLoading, setIsLoading] = useState(false)
+    const [isCurrencyLoading, setIsCurrencyLoading] = useState(false)
     const [IsLoadMoreCat, setIsLoadMoreCat] = useState(false)
     const [filePreviews, setFilePreviews] = useState({})
+    // get currencies..
+    const fetchAllCurrencies = async () => {
+        try {
+            setIsCurrencyLoading(true)
+            const response = await currencyApi.getCurrencies()
+            setCurrencies(response.data.data)
+        } catch (e) {
+            console.log(e)
+        } finally {
+            setIsCurrencyLoading(false)
+        }
+    }
+    useEffect(() => {
+        fetchAllCurrencies()
+    }, [])
+
+
 
     const getCountriesData = async (search, page) => {
         try {
@@ -536,6 +557,7 @@ const AdListing = () => {
             price: '',
             phonenumber: '',
             link: '',
+            currency: ""
         })
         if (activeTab !== 1) {
             setActiveTab(1)
@@ -592,6 +614,9 @@ const AdListing = () => {
             return
         } else if (AdListingDetails.phonenumber == '') {
             toast.error(t('phoneRequired'))
+            return
+        } else if (AdListingDetails.currency == '') {
+            toast.error("Currency required")
             return
         } else if (AdListingDetails.slug.trim() && !isValidSlug) {
             toast.error(t('addValidSlug'))
@@ -730,7 +755,8 @@ const AdListing = () => {
                     : [value]
             }
         })
-
+        console.log("add category catId", catId)
+        console.log("add category allCategories_id", allCategoryIdsString)
         const show_only_to_premium = 1
         const allData = {
             name: AdListingDetails.title,
@@ -739,6 +765,7 @@ const AdListing = () => {
             category_id: catId,
             all_category_ids: allCategoryIdsString,
             price: AdListingDetails.price,
+            currency: AdListingDetails.currency,
             contact: AdListingDetails.phonenumber,
             video_link: AdListingDetails?.link,
             custom_fields: transformedCustomFields,
@@ -921,25 +948,21 @@ const AdListing = () => {
                     <div className='col-12'>
                         <div className='tabsHeader'>
                             <span
-                                className={`tab ${
-                                    activeTab === 1 ? 'activeTab' : ''
-                                }${
-                                    DisabledTab.selectCategory
+                                className={`tab ${activeTab === 1 ? 'activeTab' : ''
+                                    }${DisabledTab.selectCategory
                                         ? 'PagArrowdisabled'
                                         : ''
-                                }`}
+                                    }`}
                                 onClick={() => handleTabClick(1)}
                             >
                                 {t('selectedCategory')}
                             </span>
                             <span
-                                className={`tab ${
-                                    activeTab === 2 ? 'activeTab' : ''
-                                }${
-                                    DisabledTab.details
+                                className={`tab ${activeTab === 2 ? 'activeTab' : ''
+                                    }${DisabledTab.details
                                         ? 'PagArrowdisabled'
                                         : ''
-                                }`}
+                                    }`}
                                 onClick={() => handleTabClick(2)}
                             >
                                 {t('details')}
@@ -947,13 +970,11 @@ const AdListing = () => {
 
                             {CustomFields.length !== 0 && (
                                 <span
-                                    className={`tab ${
-                                        activeTab === 3 ? 'activeTab' : ''
-                                    }${
-                                        DisabledTab.extraDet
+                                    className={`tab ${activeTab === 3 ? 'activeTab' : ''
+                                        }${DisabledTab.extraDet
                                             ? 'PagArrowdisabled'
                                             : ''
-                                    }`}
+                                        }`}
                                     onClick={() => handleTabClick(3)}
                                 >
                                     {t('extraDetails')}
@@ -961,17 +982,15 @@ const AdListing = () => {
                             )}
 
                             <span
-                                className={`tab ${
-                                    activeTab === 4 ? 'activeTab' : ''
-                                }${DisabledTab.img ? 'PagArrowdisabled' : ''}`}
+                                className={`tab ${activeTab === 4 ? 'activeTab' : ''
+                                    }${DisabledTab.img ? 'PagArrowdisabled' : ''}`}
                                 onClick={() => handleTabClick(4)}
                             >
                                 {t('images')}
                             </span>
                             <span
-                                className={`tab ${
-                                    activeTab === 5 ? 'activeTab' : ''
-                                }${DisabledTab.loc ? 'PagArrowdisabled' : ''}`}
+                                className={`tab ${activeTab === 5 ? 'activeTab' : ''
+                                    }${DisabledTab.loc ? 'PagArrowdisabled' : ''}`}
                                 onClick={() => handleTabClick(5)}
                             >
                                 {t('location')}
@@ -980,34 +999,34 @@ const AdListing = () => {
                     </div>
                     {activeTab === 1 || activeTab === 2
                         ? CurrentPath.length > 0 && (
-                              <div className='col-12'>
-                                  <div className='tabBreadcrumb'>
-                                      <span className='title1'>
-                                          {t('selected')}
-                                      </span>
-                                      <div className='selected_wrapper'>
-                                          {CurrentPath.map((item, index) => (
-                                              <span
-                                                  className='title2'
-                                                  key={item.id}
-                                                  onClick={() =>
-                                                      handleSelectedTabClick(
-                                                          item?.id
-                                                      )
-                                                  }
-                                              >
-                                                  {item.name}
-                                                  {index !==
-                                                      CurrentPath.length - 1 &&
-                                                  CurrentPath.length > 1
-                                                      ? ','
-                                                      : ''}
-                                              </span>
-                                          ))}
-                                      </div>
-                                  </div>
-                              </div>
-                          )
+                            <div className='col-12'>
+                                <div className='tabBreadcrumb'>
+                                    <span className='title1'>
+                                        {t('selected')}
+                                    </span>
+                                    <div className='selected_wrapper'>
+                                        {CurrentPath.map((item, index) => (
+                                            <span
+                                                className='title2'
+                                                key={item.id}
+                                                onClick={() =>
+                                                    handleSelectedTabClick(
+                                                        item?.id
+                                                    )
+                                                }
+                                            >
+                                                {item.name}
+                                                {index !==
+                                                    CurrentPath.length - 1 &&
+                                                    CurrentPath.length > 1
+                                                    ? ','
+                                                    : ''}
+                                            </span>
+                                        ))}
+                                    </div>
+                                </div>
+                            </div>
+                        )
                         : null}
                     <div className='col-12'>
                         <div className='contentWrapper'>
@@ -1028,6 +1047,8 @@ const AdListing = () => {
                                 {activeTab === 2 && (
                                     <ContentTwo
                                         AdListingDetails={AdListingDetails}
+                                        isCurrencyLoading={isCurrencyLoading}
+                                        currencies={currencies}
                                         handleAdListingChange={
                                             handleAdListingChange
                                         }

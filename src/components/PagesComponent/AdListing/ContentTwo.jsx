@@ -2,7 +2,7 @@ import { t } from '@/utils'
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 
-const ContentTwo = ({ AdListingDetails, handleAdListingChange, handleDetailsSubmit, handleDeatilsBack, systemSettingsData }) => {
+const ContentTwo = ({ AdListingDetails, handleAdListingChange, handleDetailsSubmit, handleDeatilsBack, systemSettingsData, isCurrencyLoading, currencies }) => {
 
     const currencyPosition = systemSettingsData.data.currency_symbol_position
     const currencySymbol = systemSettingsData.data.currency_symbol
@@ -44,11 +44,26 @@ const ContentTwo = ({ AdListingDetails, handleAdListingChange, handleDetailsSubm
                     />
                 </div>
                 <div className="row formWrapper">
-
-                    <div className="col-12">
-                        <label className='auth_label' htmlFor="price">{t('price')}</label>
-                        <input placeholder={placeholderLabel} value={AdListingDetails.price} name='price' className={`${AdListingDetails.price !== '' ? 'bg' : ''}`} type='number' onChange={handleAdListingChange} required />
-                    </div>
+                    <main className="currency-input">
+                        <div className="flex-1">
+                            <label className='auth_label' htmlFor="price">{t('price')}</label>
+                            <input placeholder={placeholderLabel} value={AdListingDetails.price} name='price' className={`${AdListingDetails.price !== '' ? 'bg' : ''}`} type='number' onChange={handleAdListingChange} required />
+                        </div>
+                        <div className="flex-1">
+                            {isCurrencyLoading ? "Loading..." :
+                                <>
+                                    <label className='auth_label' htmlFor="currency">{t('currency')}</label>
+                                    <select id="currency" name="currency" value={AdListingDetails.currency}
+                                        required
+                                        onChange={handleAdListingChange}
+                                        className={`${AdListingDetails.currency !== '' ? 'bg' : ''}`}
+                                    >
+                                        {currencies.map((elem) => (<option key={elem.id} value={elem.currency_symbol}>{elem.currency}</option>))}
+                                    </select>
+                                </>
+                            }
+                        </div>
+                    </main>
 
                     <div className="col-12">
                         <label className='auth_label' htmlFor="number">{t('phoneNumber')}</label>

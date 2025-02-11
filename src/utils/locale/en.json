@@ -90,6 +90,7 @@
     "description": "Description",
     "enterDescription": "Enter description",
     "price": "Price",
+    "currency":"Currency",
     "phoneNumber": "Phone Number",
     "enterPhoneNumber": "Enter phone number",
     "enterAdditionalLinks": "Enter additional link",

@@ -7173,7 +7173,14 @@ input::-webkit-inner-spin-button {
 .adListingSect .formWrapper {
   gap: 24px 0px;
 }
-
+.currency-input{
+    display:flex;
+    gap:1rem;
+    flex-wrap:wrap;
+}
+.currency-input div{
+    flex:1;
+}
 .adListingSect .formWrapper div {
   display: flex;
   flex-direction: column;

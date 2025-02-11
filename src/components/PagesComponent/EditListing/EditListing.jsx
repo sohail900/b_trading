@@ -1,6 +1,7 @@
 'use client'
 import React, { useEffect, useState } from 'react'
 import BreadcrumbComponent from '../../Breadcrumb/BreadcrumbComponent'
+import EditListingOne from './EditListingContentOne'
 import EditListingTwo from './EditListingContentTwo'
 import EditListingThree from './EditListingContentThree'
 import EditListingFour from './EditListingContentFour'
@@ -16,6 +17,8 @@ import {
     getCustomFieldsApi,
     getStatesApi,
     getParentCategoriesApi,
+    categoryApi,
+    currencyApi,
 } from '@/utils/api'
 import toast from 'react-hot-toast'
 import axios from 'axios'
@@ -29,7 +32,6 @@ const EditListing = ({ id }) => {
     const settings = systemSettingsData?.data
     const [activeTab, setActiveTab] = useState(2)
     const [IsAdSuccessfulModal, setIsAdSuccessfulModal] = useState(false)
-    const [CurrenCategory, setCurrenCategory] = useState([])
     const [CustomFields, setCustomFields] = useState([])
     const [AdListingDetails, setAdListingDetails] = useState({
         title: '',
@@ -38,14 +40,22 @@ const EditListing = ({ id }) => {
         price: '',
         phonenumber: '',
         link: '',
+        currency: ""
     })
     const [CreatedAdSlug, setCreatedAdSlug] = useState('')
+
+    const [IsLoadMoreCat, setIsLoadMoreCat] = useState(false)
+    const [currentPage, setCurrentPage] = useState()
+    const [lastPage, setLastPage] = useState()
     const [selectedCategoryPath, setSelectedCategoryPath] = useState([])
     const [selectedCateId, setSelectedCateId] = useState('')
     const [extraDetails, setExtraDetails] = useState({})
     const [uploadedImages, setUploadedImages] = useState([])
+    const [CurrentPath, setCurrentPath] = useState([])
+    const [CurrenCategory, setCurrenCategory] = useState([])
     const [OtherImages, setOtherImages] = useState([])
     const [Location, setLocation] = useState({})
+    const [isCategoryLoading, setIsCategoryLoading] = useState(false)
     const [CountryStore, setCountryStore] = useState({
         Countries: [],
         SelectedCountry: {},
@@ -80,7 +90,9 @@ const EditListing = ({ id }) => {
     const [deleteImagesId, setDeleteImagesId] = useState('')
     const [allCategoryIds, setAllCategoryIds] = useState('')
     const [filePreviews, setFilePreviews] = useState({})
+    const [isCurrencyLoading, setIsCurrencyLoading] = useState(false)
     const [isAdPlaced, setIsAdPlaced] = useState(false)
+    const [currencies, setCurrencies] = useState([])
 
     const getCountriesData = async (search, page) => {
         try {
@@ -115,6 +127,20 @@ const EditListing = ({ id }) => {
             console.error('Error fetching countries data:', error)
         }
     }
+    const fetchAllCurrencies = async () => {
+        try {
+            setIsCurrencyLoading(true)
+            const response = await currencyApi.getCurrencies()
+            setCurrencies(response.data.data)
+        } catch (e) {
+            console.log(e)
+        } finally {
+            setIsCurrencyLoading(false)
+        }
+    }
+    useEffect(() => {
+        fetchAllCurrencies()
+    }, [])
 
     const handleCountryScroll = (event) => {
         const { target } = event
@@ -501,7 +527,7 @@ const EditListing = ({ id }) => {
         }
     }, [selectedCateId])
 
-    useEffect(() => {}, [selectedCategoryPath])
+    useEffect(() => { }, [selectedCategoryPath])
 
     const handleGoBack = () => {
         if (activeTab == 4 && CustomFields?.length == 0) {
@@ -666,6 +692,12 @@ const EditListing = ({ id }) => {
         const transformedCustomFields = {}
         const customFieldFiles = []
 
+        const allCategoryIdsString = CurrentPath.map(
+            (category) => category.id
+        ).join(',')
+        const cat = CurrentPath[CurrentPath.length - 1]
+        const catId = cat?.id
+
         Object.entries(extraDetails).forEach(([key, value]) => {
             if (value === null || value === undefined || value === '') {
                 // Handle the case where the input file is null
@@ -690,8 +722,11 @@ const EditListing = ({ id }) => {
             slug: AdListingDetails.slug.trim(),
             description: AdListingDetails?.desc,
             price: AdListingDetails.price,
+            category_id: catId,
+            all_category_ids: allCategoryIdsString,
             contact: AdListingDetails.phonenumber,
             video_link: AdListingDetails?.link,
+            currency: AdListingDetails.currency,
             custom_fields: transformedCustomFields,
             image: typeof uploadedImages == 'string' ? null : uploadedImages[0],
             gallery_images: OtherImages,
@@ -726,7 +761,7 @@ const EditListing = ({ id }) => {
     }
 
     const handleFullSubmission = () => {
-        const { title, desc, price, slug, phonenumber, link } = AdListingDetails
+        const { title, desc, price, slug, phonenumber, link, currency } = AdListingDetails
 
         const isValidSlug = /^[a-z0-9-]+$/.test(slug.trim())
 
@@ -798,6 +833,7 @@ const EditListing = ({ id }) => {
                 price: listingData?.price || '',
                 phonenumber: listingData?.contact || '',
                 link: listingData?.video_link || '',
+                currency: listingData?.currency || "₺"
             }))
 
             setLocation({
@@ -821,6 +857,53 @@ const EditListing = ({ id }) => {
         }
         getData()
     }, [])
+    const fetchMoreCategory = async (id) => {
+        setIsLoadMoreCat(true)
+        try {
+            if (currentPage < lastPage) {
+                const response = await categoryApi.getCategory({
+                    page: `${currentPage + 1}`,
+                    category_id: lastItemId,
+                })
+                const { data } = response.data
+                if (data && Array.isArray(data.data)) {
+                    setCurrenCategory((prev) => [...prev, ...data.data])
+                    setCurrentPage(data?.data?.current_page) // Update the current page
+                    setLastPage(data?.data?.last_page) // Update the current page
+                } else {
+                    console.error('Error: Data is not an array', data)
+                    // setIsLoading(false);
+                }
+            } else {
+                return
+            }
+        } catch (error) {
+            // setIsLoading(false)
+            console.error('Error:', error)
+        } finally {
+            setIsLoadMoreCat(false)
+        }
+    }
+    let lastItemId = CurrentPath[CurrentPath.length - 1]?.id
+    const getCategoriesData = async (type) => {
+        try {
+            setIsCategoryLoading(true)
+            const res = await categoryApi.getCategory({
+                category_id: type ? type : lastItemId,
+            })
+            const data = res?.data?.data?.data
+            setCurrenCategory(data)
+            setCurrentPage(res?.data?.data?.current_page) // Update the current page
+            setLastPage(res?.data?.data?.last_page) // Update the current page
+        } catch (error) {
+            console.log(error)
+        } finally {
+            setIsCategoryLoading(false)
+        }
+    }
+    useEffect(() => {
+        getCategoriesData()
+    }, [lastItemId, CurrentLanguage])
     const setEditCategory = async (category) => {
         const selectedCategoryIds = category
             ?.split(',')
@@ -829,6 +912,7 @@ const EditListing = ({ id }) => {
             selectedCategoryIds?.includes(category.id)
         )
         const sequencedCategories = []
+
         const traverseCategories = (categories) => {
             for (const category of categories) {
                 if (selectedCategoryIds?.includes(category?.id)) {
@@ -844,7 +928,38 @@ const EditListing = ({ id }) => {
         }
         traverseCategories(filteredCategories)
     }
-
+    //
+    // onChange (categories)
+    const handleCategoryTabClick = async (category) => {
+        setCurrentPath((prevPath) => [...prevPath, category])
+        setSelectedCategoryPath((prevPath) => [...prevPath, category]);
+        if (category?.subcategories_count > 0) {
+            if (category?.subcategories?.length > 0) {
+                setCurrenCategory(category?.subcategories)
+            } else {
+                await getCategoriesData(category?.id)
+            }
+        } else {
+            setActiveTab(2)
+        }
+    }
+    // handle selected tabs.
+    const handleSelectedTabClick = (id) => {
+        setSelectedCategoryPath([])
+        if (activeTab !== 1) {
+            setActiveTab(1)
+        }
+        const index = CurrentPath.findIndex((item) => item.id === id)
+        if (index !== -1) {
+            const newPath = CurrentPath.slice(0, index)
+            setCurrentPath(newPath)
+        }
+        if (index === 0) {
+            setCurrenCategory([])
+            getCategoriesData('')
+            setCurrentPath([])
+        }
+    }
     return isLoading == false ? (
         <>
             <BreadcrumbComponent title2={t('editListing')} />
@@ -858,82 +973,118 @@ const EditListing = ({ id }) => {
                     <div className='col-12'>
                         <div className='tabsHeader'>
                             <span
-                                className={`tab ${
-                                    activeTab === 2 ? 'activeTab' : ''
-                                }`}
+                                className={`tab ${activeTab === 1 ? 'activeTab' : ''
+                                    }`}
+
+
+                            >
+                                {t('selectedCategory')}
+                            </span>
+                            <span
+                                className={`tab ${activeTab === 2 ? 'activeTab' : ''
+                                    } ${activeTab === 1
+                                        ? 'PagArrowdisabled'
+                                        : ''
+                                    }`}
+
                                 onClick={() => setActiveTab(2)}
                             >
                                 {t('details')}
                             </span>
                             {CustomFields.length !== 0 && (
                                 <span
-                                    className={`tab ${
-                                        activeTab === 3 ? 'activeTab' : ''
-                                    }`}
+                                    className={`tab ${activeTab === 3 ? 'activeTab' : ''
+                                        }${activeTab === 1
+                                            ? 'PagArrowdisabled'
+                                            : ''
+                                        }`}
                                     onClick={() => setActiveTab(3)}
                                 >
                                     {t('extraDetails')}
                                 </span>
                             )}
                             <span
-                                className={`tab ${
-                                    activeTab === 4 ? 'activeTab' : ''
-                                }`}
+                                className={`tab ${activeTab === 4 ? 'activeTab' : ''
+                                    }${activeTab === 1
+                                        ? 'PagArrowdisabled'
+                                        : ''
+                                    }`}
                                 onClick={() => setActiveTab(4)}
                             >
                                 {t('images')}
                             </span>
                             <span
-                                className={`tab ${
-                                    activeTab === 5 ? 'activeTab' : ''
-                                }`}
+                                className={`tab ${activeTab === 5 ? 'activeTab' : ''
+                                    }${activeTab === 1
+                                        ? 'PagArrowdisabled'
+                                        : ''
+                                    }`}
                                 onClick={() => setActiveTab(5)}
                             >
                                 {t('location')}
                             </span>
                         </div>
                     </div>
-                    {activeTab === 2
+                    {activeTab === 1 || activeTab === 2
                         ? selectedCategoryPath &&
-                          selectedCategoryPath?.length > 0 && (
-                              <div className='col-12'>
-                                  <div className='tabBreadcrumb'>
-                                      <span className='title1'>
-                                          {t('selected')} {''} {t('category')}
-                                      </span>
-                                      <div className='selected_wrapper'>
-                                          {selectedCategoryPath &&
-                                              selectedCategoryPath?.map(
-                                                  (item, index) => (
-                                                      <span
-                                                          className='title2edit'
-                                                          key={item.id}
-                                                      >
-                                                          {item.name}
-                                                          {index !==
-                                                              selectedCategoryPath?.length -
-                                                                  1 &&
-                                                          selectedCategoryPath?.length >
-                                                              1
-                                                              ? ','
-                                                              : ''}
-                                                      </span>
-                                                  )
-                                              )}
-                                      </div>
-                                  </div>
-                              </div>
-                          )
+                        selectedCategoryPath?.length > 0 && (
+                            <div className='col-12'>
+                                <div className='tabBreadcrumb'>
+                                    <span className='title1'>
+                                        {t('selected')} {''} {t('category')}
+                                    </span>
+                                    <div className='selected_wrapper'>
+                                        {selectedCategoryPath &&
+                                            selectedCategoryPath?.map(
+                                                (item, index) => (
+                                                    <span
+                                                        style={{ cursor: "pointer" }}
+                                                        className='title2edit'
+                                                        key={item.id}
+                                                        onClick={() =>
+                                                            handleSelectedTabClick(
+                                                                item?.id
+                                                            )
+                                                        }
+                                                    >
+                                                        {item.name}
+                                                        {index !==
+                                                            selectedCategoryPath?.length -
+                                                            1 &&
+                                                            selectedCategoryPath?.length >
+                                                            1
+                                                            ? ','
+                                                            : ''}
+                                                    </span>
+                                                )
+                                            )}
+                                    </div>
+                                </div>
+                            </div>
+                        )
                         : null}
                     <div className='col-12'>
                         <div className='contentWrapper'>
                             <div className='row'>
+                                {activeTab === 1 && (
+                                    <EditListingOne handleCategoryTabClick={
+                                        handleCategoryTabClick
+                                    }
+                                        CurrenCategory={CurrenCategory}
+                                        currentPage={currentPage}
+                                        lastPage={lastPage}
+                                        fetchMoreCategory={fetchMoreCategory}
+                                        IsLoading={isCategoryLoading}
+                                        IsLoadMoreCat={IsLoadMoreCat} />
+                                )}
                                 {activeTab === 2 && (
                                     <EditListingTwo
                                         AdListingDetails={AdListingDetails}
                                         handleAdListingChange={
                                             handleAdListingChange
                                         }
+                                        isCurrencyLoading={isCurrencyLoading}
+                                        currencies={currencies}
                                         handleDetailsSubmit={
                                             handleDetailsSubmit
                                         }

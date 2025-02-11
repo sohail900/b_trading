@@ -15,8 +15,9 @@ const FAQS = () => {
     const CurrentLanguage = useSelector(CurrentLanguageData)
 
     const getFaqData = async () => {
+        const language_code = CurrentLanguage.code
         try {
-            const res = await getFaqApi.getFaq()
+            const res = await getFaqApi.getFaq(language_code)
             setFaq(res?.data?.data)
         } catch (error) {
             console.log(error)
@@ -27,7 +28,7 @@ const FAQS = () => {
 
     useEffect(() => {
         getFaqData()
-    }, [])
+    }, [CurrentLanguage.code])
 
     return (
         <section className='static_pages'>
