@@ -27,8 +27,10 @@ const Blogs = () => {
 
     const getBlogsData = async () => {
         try {
+            setIsBlogsLoading(true)
             const res = await getBlogsApi.getBlogs({
-                tag: tag ? tag : ""
+                tag: tag ? tag : "",
+                language_code: CurrentLanguage.code
             })
             setBlogs(res?.data?.data?.data)
 
@@ -42,7 +44,7 @@ const Blogs = () => {
 
     useEffect(() => {
         getBlogsData()
-    }, [tag])
+    }, [tag, CurrentLanguage])
 
     const getBlogTagsData = async () => {
         try {
@@ -56,7 +58,8 @@ const Blogs = () => {
     }
     const getPopulerBlogsData = async () => {
         try {
-            const res = await getBlogsApi.getBlogs({ sort_by: "new-to-old" })
+            setIsPopularPostLoading(true)
+            const res = await getBlogsApi.getBlogs({ sort_by: "new-to-old", language_code: CurrentLanguage.code })
             setPopulerBlogs(res?.data?.data?.data)
         } catch (error) {
             console.log(error)
@@ -68,7 +71,7 @@ const Blogs = () => {
     useEffect(() => {
         getBlogTagsData()
         getPopulerBlogsData()
-    }, [])
+    }, [CurrentLanguage.code])
 
 
     return (

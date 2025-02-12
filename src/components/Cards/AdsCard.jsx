@@ -81,7 +81,7 @@ const AdsCard = ({ data, sortBy }) => {
                 <span className='product_card_prod_price'>
                     {data?.price === 0
                         ? t('Free')
-                        : formatPriceAbbreviated(data?.price)}
+                        : formatPriceAbbreviated(data?.price, data?.currency)}
                 </span>
 
                 <div className='eyeheart_cont'>

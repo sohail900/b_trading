@@ -95,7 +95,7 @@ const ProdcutHorizontalCard = ({ data, handleLike }) => {
                     </div>
                     <div className='title_details'>
                         <span className='product_card_prod_price'>
-                            {formatPriceAbbreviated(data?.price)}
+                            {formatPriceAbbreviated(data?.price, data?.currency)}
                         </span>
                         <span className='title'>{data?.name}</span>
                         {/* <span className='decs'>{data?.description}</span> */}

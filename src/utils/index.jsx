@@ -297,25 +297,7 @@ const countryLocaleMap = {
 //   VN: { K: 'Nghìn', M: 'Triệu', B: 'Tỷ', divisor: [1000, 1000000, 1000000000] }, // Vietnam: Thousand, Million, Billion
 //   ID: { K: 'Ribu', M: 'Juta', B: 'Miliar', divisor: [1000, 1000000, 1000000000] }, // Indonesia: Thousand (Ribu), Million (Juta), Billion (Miliar)
 // };
-function formatPrice(price) {
-    if (!price) return 0
-    if (price < 10000) {
-        return price
-    }
-    const DOT_POSITION = 2
-    const GROUP_SIZE = 3
 
-    const priceString = price.toString()
-
-    const [firstTwo, ...rest] = [
-        priceString.slice(0, DOT_POSITION),
-        ...(priceString
-            .slice(DOT_POSITION)
-            .match(new RegExp(`.{1,${GROUP_SIZE}}`, 'g')) || []), // Create a group of 1 to 3 digits
-    ]
-
-    return `${firstTwo}.${rest.join(',')}`
-}
 export const exactPrice = (price) => {
     const countryCode =
         process.env.NEXT_PUBLIC_DEFAULT_COUNTRY?.toUpperCase() || 'US'
@@ -348,12 +330,15 @@ export const exactPrice = (price) => {
 // };
 
 // Function to format large numbers as strings with K, M, and B abbreviations
-export const formatPriceAbbreviated = (price) => {
+export const formatPriceAbbreviated = (price, currency = "$") => {
     const settingsData = store.getState()?.Settings?.data?.data
     // const isSuffix = Number(settingsData?.number_with_suffix);
-    const currencySymbol = settingsData?.currency_symbol
+    const currencySymbol = settingsData?.currency_symbol == "-" ? currency : settingsData?.currency_symbol
+    // ads --> currecYpostion.
+
     const currencyPosition =
         store.getState()?.Settings?.data?.data?.currency_symbol_position
+
     const countryCode =
         process.env.NEXT_PUBLIC_DEFAULT_COUNTRY?.toUpperCase() || 'US'
     // const suffixes = countrySuffixMap[countryCode] || countrySuffixMap.US;
@@ -619,7 +604,7 @@ export const loadStripeApiKey = () => {
     const STRIPEData = store.getState()?.Settings
     const StripeKey = STRIPEData?.data?.stripe_publishable_key
     if (StripeKey) {
-        ;``
+        ; ``
         return StripeKey
     }
     return false

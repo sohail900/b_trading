@@ -64,7 +64,7 @@ const HomePage = () => {
                     }
                 }
                 const response = await FeaturedSectionApi.getFeaturedSections(
-                    params
+                    { ...params, language_code: CurrentLanguage.code }
                 )
                 const { data } = response.data
                 setFeaturedData(data)

@@ -36,7 +36,7 @@ const FeaturedViewAll = ({ slug }) => {
 
     const fetchFeaturedSectionData = async () => {
         try {
-            const response = await FeaturedSectionApi.getFeaturedSections({ slug: slug });
+            const response = await FeaturedSectionApi.getFeaturedSections({ slug: slug, language_code: CurrentLanguage.code });
             const { data } = response.data;
             const featureSectionData = data?.[0];
             setFeaturedTitle(featureSectionData?.title);
@@ -57,7 +57,7 @@ const FeaturedViewAll = ({ slug }) => {
 
     const fetchItemsData = async (page) => {
         try {
-            if(page === 1){
+            if (page === 1) {
                 setIsLoading(true);
             }
             const response = await allItemApi.getItems({

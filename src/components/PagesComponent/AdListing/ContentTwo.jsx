@@ -58,7 +58,7 @@ const ContentTwo = ({ AdListingDetails, handleAdListingChange, handleDetailsSubm
                                         onChange={handleAdListingChange}
                                         className={`${AdListingDetails.currency !== '' ? 'bg' : ''}`}
                                     >
-                                        {currencies.map((elem) => (<option key={elem.id} value={elem.currency_symbol}>{elem.currency}</option>))}
+                                        {currencies.map((elem) => (<option key={elem.id} value={elem.currency_symbol}>{`${elem.currency} (${elem.currency_symbol})`}</option>))}
                                     </select>
                                 </>
                             }

@@ -16,7 +16,7 @@ const QuickAnswers = () => {
 
     const getFaqData = async () => {
         try {
-            const res = await getFaqApi.getFaq()
+            const res = await getFaqApi.getFaq({ langauge_code: CurrentLanguage.code })
             setFaq(res?.data?.data)
         } catch (error) {
             console.log(error)
@@ -25,7 +25,7 @@ const QuickAnswers = () => {
 
     useEffect(() => {
         getFaqData()
-    }, [])
+    }, [CurrentLanguage.code])
 
 
     return (

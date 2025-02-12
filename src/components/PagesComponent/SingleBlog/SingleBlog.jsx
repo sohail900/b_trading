@@ -37,7 +37,7 @@ const SingleBlog = () => {
 
     const getBlogsData = async () => {
         try {
-            const res = await getBlogsApi.getBlogs({ slug: blogSlug })
+            const res = await getBlogsApi.getBlogs({ slug: blogSlug, language_code: CurrentLanguage.code })
             setBlogData(res?.data?.data?.data[0])
             const title = res?.data?.data?.data[0]?.title
             dispatch(setBreadcrumbPath([{
@@ -57,7 +57,7 @@ const SingleBlog = () => {
         if (blogSlug) {
             getBlogsData()
         }
-    }, [blogSlug])
+    }, [blogSlug, CurrentLanguage.code])
     const getBlogTagsData = async () => {
         try {
             const res = await getBlogTagsApi.getBlogs({})

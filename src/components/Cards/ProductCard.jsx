@@ -88,7 +88,8 @@ const ProductCard = ({ data, handleLike }) => {
             </div>
             <div className='product_card_prod_price_cont'>
                 <span className='product_card_prod_price'>
-                    {formatPriceAbbreviated(data?.price)}
+
+                    {formatPriceAbbreviated(data?.price, data?.currency)}
                 </span>
                 <p className='product_card_prod_date'>
                     {formatDate(data?.created_at)}&lrm;

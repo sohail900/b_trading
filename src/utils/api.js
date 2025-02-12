@@ -209,13 +209,14 @@ export const getPackageApi = {
 
 // BLOGS API
 export const getBlogsApi = {
-    getBlogs: ({ slug, category_id, sort_by, tag } = {}) => {
+    getBlogs: ({ slug, category_id, sort_by, tag,language_code } = {}) => {
         return Api.get(GET_BLOGS, {
             params: {
                 slug,
                 category_id,
                 sort_by,
                 tag,
+                language_code
             },
         })
     },
@@ -248,6 +249,7 @@ export const FeaturedSectionApi = {
         latitude,
         longitude,
         radius,
+        langauge_code
     } = {}) => {
         return Api.get(GET_FEATURED_SECTION, {
             params: {
@@ -258,6 +260,7 @@ export const FeaturedSectionApi = {
                 latitude,
                 longitude,
                 radius,
+                langauge_code
             },
         })
     },

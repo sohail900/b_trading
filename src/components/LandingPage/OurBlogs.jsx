@@ -23,7 +23,7 @@ const OurBlogs = () => {
     const getBlogsData = async () => {
         try {
             setIsLoading(true)
-            const res = await getBlogsApi.getBlogs()
+            const res = await getBlogsApi.getBlogs({ language_code: lang.code })
             setBlogs(res?.data?.data?.data)
             setIsLoading(false)
         } catch (error) {
@@ -33,7 +33,7 @@ const OurBlogs = () => {
 
     useEffect(() => {
         getBlogsData()
-    }, [])
+    }, [lang.code])
 
     useEffect(() => {
         if (swiperRef.current) {
