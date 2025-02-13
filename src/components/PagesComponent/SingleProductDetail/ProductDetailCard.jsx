@@ -65,7 +65,7 @@ const ProductDetailCard = ({
                     <div className='title_and_price'>
                         <span className='title'>{productData?.name}</span>
                         <span className='price'>
-                            {formatPrice(productData?.price, productData?.currency)}
+                            {formatPrice(productData?.price ?? "0", productData?.currency)}
                         </span>
                     </div>
                     <div className='like_share'>

@@ -86,7 +86,7 @@ const MyProdDetail = ({ SingleListing, t, Status, slug }) => {
                 </div>
                 <div className='price_ad'>
                     <div className='price'>
-                        {console.log("single-listing-price", SingleListing?.price)}
+
                         <span>{formatPrice(Number(SingleListing?.price), SingleListing?.currency)}</span>
                     </div>
                     <span className='ad'>
