@@ -3,7 +3,7 @@ import Image from 'next/image'
 import { FaRegHeart } from 'react-icons/fa'
 import {
     formatDate,
-    formatPriceAbbreviated,
+    formatPrice,
     placeholderImage,
     t,
 } from '@/utils'
@@ -89,7 +89,7 @@ const ProductCard = ({ data, handleLike }) => {
             <div className='product_card_prod_price_cont'>
                 <span className='product_card_prod_price'>
 
-                    {formatPriceAbbreviated(data?.price, data?.currency)}
+                    {formatPrice(data?.price, data?.currency)}
                 </span>
                 <p className='product_card_prod_date'>
                     {formatDate(data?.created_at)}&lrm;

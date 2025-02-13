@@ -3,7 +3,7 @@ import Image from 'next/image'
 import { FaRegHeart } from 'react-icons/fa6'
 import {
     formatDate,
-    formatPriceAbbreviated,
+    formatPrice,
     placeholderImage,
     t,
 } from '@/utils'
@@ -95,7 +95,7 @@ const ProdcutHorizontalCard = ({ data, handleLike }) => {
                     </div>
                     <div className='title_details'>
                         <span className='product_card_prod_price'>
-                            {formatPriceAbbreviated(data?.price, data?.currency)}
+                            {formatPrice(data?.price, data?.currency)}
                         </span>
                         <span className='title'>{data?.name}</span>
                         {/* <span className='decs'>{data?.description}</span> */}

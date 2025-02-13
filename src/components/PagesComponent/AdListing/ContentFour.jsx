@@ -54,7 +54,7 @@ const ContentFour = ({ uploadedImages, setUploadedImages, OtherImages, setOtherI
 
     const onOtherDrop = useCallback((acceptedFiles) => {
         const currentFilesCount = OtherImages.length; // Number of files already uploaded
-        const remainingSlots = 5 - currentFilesCount; // How many more files can be uploaded
+        const remainingSlots = 15 - currentFilesCount; // How many more files can be uploaded
 
         if (remainingSlots === 0) {
             // Show error if the limit has been reached

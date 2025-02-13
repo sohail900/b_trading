@@ -249,8 +249,9 @@ export const FeaturedSectionApi = {
         latitude,
         longitude,
         radius,
-        langauge_code
-    } = {}) => {
+        language_code
+    }={}) => {
+
         return Api.get(GET_FEATURED_SECTION, {
             params: {
                 city,
@@ -260,7 +261,7 @@ export const FeaturedSectionApi = {
                 latitude,
                 longitude,
                 radius,
-                langauge_code
+                language_code
             },
         })
     },

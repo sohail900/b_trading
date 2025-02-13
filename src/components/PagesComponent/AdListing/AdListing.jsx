@@ -755,8 +755,7 @@ const AdListing = () => {
                     : [value]
             }
         })
-        console.log("add category catId", catId)
-        console.log("add category allCategories_id", allCategoryIdsString)
+
         const show_only_to_premium = 1
         const allData = {
             name: AdListingDetails.title,
@@ -854,11 +853,10 @@ const AdListing = () => {
             setActiveTab(4)
             return
         }
-
         if (
-            !Location?.country ||
-            !Location?.state ||
-            !Location?.city ||
+            // !Location?.country ||
+            // !Location?.state ||
+            // !Location?.city ||
             !Location?.address
         ) {
             toast.error(t('pleaseSelectCity'))

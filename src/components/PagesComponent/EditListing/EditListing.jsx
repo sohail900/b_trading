@@ -987,7 +987,7 @@ const EditListing = ({ id }) => {
                                         : ''
                                     }`}
 
-                                onClick={() => setActiveTab(2)}
+                                onClick={() => setActiveTab(activeTab == 1 ? 1 : 2)}
                             >
                                 {t('details')}
                             </span>
@@ -998,7 +998,7 @@ const EditListing = ({ id }) => {
                                             ? 'PagArrowdisabled'
                                             : ''
                                         }`}
-                                    onClick={() => setActiveTab(3)}
+                                    onClick={() => setActiveTab(activeTab == 1 ? 1 : 3)}
                                 >
                                     {t('extraDetails')}
                                 </span>
@@ -1009,7 +1009,7 @@ const EditListing = ({ id }) => {
                                         ? 'PagArrowdisabled'
                                         : ''
                                     }`}
-                                onClick={() => setActiveTab(4)}
+                                onClick={() => setActiveTab(activeTab == 1 ? 1 : 4)}
                             >
                                 {t('images')}
                             </span>
@@ -1019,7 +1019,7 @@ const EditListing = ({ id }) => {
                                         ? 'PagArrowdisabled'
                                         : ''
                                     }`}
-                                onClick={() => setActiveTab(5)}
+                                onClick={() => setActiveTab(activeTab == 1 ? 1 : 5)}
                             >
                                 {t('location')}
                             </span>

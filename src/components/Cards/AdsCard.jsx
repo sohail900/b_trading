@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import { RxCross2, RxEyeOpen } from 'react-icons/rx'
 import { BiBadgeCheck, BiHeart } from 'react-icons/bi'
-import { formatPriceAbbreviated, placeholderImage, t, truncate } from '@/utils'
+import { formatPrice, placeholderImage, t, truncate } from '@/utils'
 import { IoTimerOutline } from 'react-icons/io5'
 import { MdOutlineLiveTv, MdOutlineSell } from 'react-icons/md'
 import Link from 'next/link'
@@ -81,7 +81,7 @@ const AdsCard = ({ data, sortBy }) => {
                 <span className='product_card_prod_price'>
                     {data?.price === 0
                         ? t('Free')
-                        : formatPriceAbbreviated(data?.price, data?.currency)}
+                        : formatPrice(data?.price, data?.currency)}
                 </span>
 
                 <div className='eyeheart_cont'>

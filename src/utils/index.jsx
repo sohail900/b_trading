@@ -329,6 +329,36 @@ export const exactPrice = (price) => {
 //     : `${currencySymbol} ${formattedValue}${suffix}`;
 // };
 
+
+export function formatPrice(price, currency = "$") {
+    let priceString
+
+    if (typeof price === "string") {
+        priceString = Number(price)?.toFixed(2);
+    } else {
+        priceString = price?.toFixed(2);
+    }
+
+    const parts = priceString.split('.');
+
+    const wholePart = parts[0];
+    let formattedWhole = '';
+    let count = 0;
+
+    for (let i = wholePart.length - 1; i >= 0; i--) {
+        formattedWhole = wholePart[i] + formattedWhole;
+        count++;
+        if (count % 3 === 0 && i !== 0) {
+            formattedWhole = '.' + formattedWhole;
+        }
+    }
+
+    const fractionalPart = parts[1];
+    return `${currency} ${formattedWhole},${fractionalPart}`;
+}
+
+
+
 // Function to format large numbers as strings with K, M, and B abbreviations
 export const formatPriceAbbreviated = (price, currency = "$") => {
     const settingsData = store.getState()?.Settings?.data?.data

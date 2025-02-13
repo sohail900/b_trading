@@ -1,6 +1,6 @@
 'use client'
 import ReactShare from '@/components/SEO/ReactShare'
-import { exactPrice, formatMyListingDate } from '@/utils'
+import { exactPrice, formatMyListingDate, formatPrice } from '@/utils'
 import { deleteItemApi } from '@/utils/api'
 import { Dropdown } from 'antd'
 import { useRouter } from 'next/navigation'
@@ -86,7 +86,8 @@ const MyProdDetail = ({ SingleListing, t, Status, slug }) => {
                 </div>
                 <div className='price_ad'>
                     <div className='price'>
-                        <span>{exactPrice(SingleListing?.price)}</span>
+                        {console.log("single-listing-price", SingleListing?.price)}
+                        <span>{formatPrice(Number(SingleListing?.price), SingleListing?.currency)}</span>
                     </div>
                     <span className='ad'>
                         {t('adId')} #{SingleListing?.id}
@@ -121,8 +122,8 @@ const MyProdDetail = ({ SingleListing, t, Status, slug }) => {
                     {t('delete')}
                 </button>
                 {SingleListing?.status == 'sold out' ||
-                SingleListing?.status == 'rejected' ||
-                SingleListing?.status === 'inactive' ? (
+                    SingleListing?.status == 'rejected' ||
+                    SingleListing?.status === 'inactive' ? (
                     <></>
                 ) : (
                     <button className='cyna_btn' onClick={handleEditClick}>

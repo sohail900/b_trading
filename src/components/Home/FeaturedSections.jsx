@@ -25,7 +25,7 @@ const FeaturedSections = ({ featuredData, setFeaturedData, allEmpty }) => {
             <div className="row product_card_card_gap">
                 <div className="col-12">
                     <div className="all_sections">
-                    {featuredData && !allEmpty && (
+                        {featuredData && !allEmpty && (
                             featuredData.map((ele, index) => (
                                 ele?.section_data.length > 0 && (
                                     <div key={index} className="w-100">

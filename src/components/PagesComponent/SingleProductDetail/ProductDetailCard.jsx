@@ -1,6 +1,6 @@
 'use client'
 import ReactShare from '@/components/SEO/ReactShare'
-import { exactPrice, formatProdDate, isLogin, t } from '@/utils'
+import { formatPrice, formatProdDate, isLogin, t } from '@/utils'
 import { manageFavouriteApi } from '@/utils/api'
 import { Dropdown } from 'antd'
 import { usePathname } from 'next/navigation'
@@ -57,7 +57,7 @@ const ProductDetailCard = ({
             console.log(error)
         }
     }
-    console.log(productData)
+
     return (
         <div className='product card'>
             <div className='card-body'>
@@ -65,7 +65,7 @@ const ProductDetailCard = ({
                     <div className='title_and_price'>
                         <span className='title'>{productData?.name}</span>
                         <span className='price'>
-                            {exactPrice(productData?.price)}
+                            {formatPrice(productData?.price, productData?.currency)}
                         </span>
                     </div>
                     <div className='like_share'>
